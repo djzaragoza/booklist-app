@@ -47,8 +47,8 @@ class UI {
       container.insertBefore(div, form);
 
 
-      // vanish in 1.5 seconds
-      setTimeout(() => document.querySelector('.alert').remove(), 1500); // 1500 is in milliseconds
+      // vanish in 3 seconds
+      setTimeout(() => document.querySelector('.alert').remove(), 3000); // 3000 is in milliseconds
    }
 
    static clearFields() {
@@ -92,7 +92,7 @@ class Store {
 
       localStorage.setItem('books', JSON.stringify(books));
    }
-}
+};
 
 
 // Event: display books in the list
@@ -115,7 +115,7 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
       UI.showAlert('Please fill in all fields', 'danger');
    } else {
       // instantiate book
-      const book = new Book(title, author, isbn)
+      const book = new Book(title, author, isbn);
 
       // add book to UI
       UI.addBookToList(book);
@@ -124,7 +124,7 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
       Store.addBook(book);
 
       // show success message
-      UI.showAlert('Book Added', 'success');
+      UI.showAlert('Book Added!', 'success');
 
       // clear fields
       UI.clearFields();
@@ -143,5 +143,5 @@ document.querySelector('#book-list').addEventListener('click', (e) => {
    Store.removeBook(e.target.parentElement.previousElementSibling.textContent);
 
    // show book deleted message
-   UI.showAlert('Book Removed', 'success');
+   UI.showAlert('Book Removed!', 'success');
 });
