@@ -92,7 +92,7 @@ class Store {
 
       localStorage.setItem('books', JSON.stringify(books));
    }
-};
+}
 
 
 // Event: display books in the list
