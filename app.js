@@ -12,20 +12,7 @@ class Book {
 
 class UI {
    static displayBooks() {
-      const StoredBooks = [
-         {
-            title: 'Book One',
-            author: 'John Doe',
-            isbn: '3434434'
-         },
-         {
-            title: 'Book Two',
-            author: 'Jane Doe',
-            isbn: '45545'
-         }
-      ];
-
-      const books = StoredBooks;
+      const books = Store.getBooks();
 
       books.forEach((book) => UI.addBookToList(book));
    }
@@ -60,8 +47,8 @@ class UI {
       container.insertBefore(div, form);
 
 
-      // vanish in 5 seconds
-      setTimeout(() => document.querySelector('.alert').remove(), 5000);
+      // vanish in 1.5 seconds
+      setTimeout(() => document.querySelector('.alert').remove(), 1500); // 1500 is in milliseconds
    }
 
    static clearFields() {
@@ -73,6 +60,39 @@ class UI {
 
 
 // Store class: handles local storage
+
+class Store {
+   static getBooks() {
+      let books;
+      if (localStorage.getItem('books') === null) {
+         books = [];
+      } else {
+         books = JSON.parse(localStorage.getItem('books'));
+      }
+
+      return books;
+   }
+
+   static addBook(book) {
+      const books = Store.getBooks();
+
+      books.push(book);
+
+      localStorage.setItem('books', JSON.stringify(books));
+   }
+
+   static removeBook(isbn) {
+      const books = Store.getBooks();
+
+      books.forEach((book, index) => {
+         if (book.isbn === isbn) {
+            books.splice(index, 1);
+         }
+      });
+
+      localStorage.setItem('books', JSON.stringify(books));
+   }
+}
 
 
 // Event: display books in the list
@@ -100,6 +120,12 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
       // add book to UI
       UI.addBookToList(book);
 
+      // add book to Store
+      Store.addBook(book);
+
+      // show success message
+      UI.showAlert('Book Added', 'success');
+
       // clear fields
       UI.clearFields();
 
@@ -110,5 +136,12 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
 // Event: delete a Book
 document.querySelector('#book-list').addEventListener('click', (e) => {
    //console.log(e.target)
-   UI.deleteBook(e.target)
-})
+   // remove book from UI
+   UI.deleteBook(e.target);
+
+   // remove book from Store
+   Store.removeBook(e.target.parentElement.previousElementSibling.textContent);
+
+   // show book deleted message
+   UI.showAlert('Book Removed', 'success');
+});
